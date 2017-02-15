@@ -44,6 +44,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
         panic(err)
     }
     defer req.Body.Close()
+    log.Printf("%+v\n", t)
     log.Println(t.ID)
     getMessage(t.ID)
     //LOG: that
