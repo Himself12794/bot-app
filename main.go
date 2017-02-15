@@ -25,7 +25,7 @@ func sendTestMessage() {
     
     fmt.Println("URL:>", apiURL)
 
-    var jsonStr = []byte(`{"markdown":"` + &message + `", "roomId":"` + testRoom + `"}`)
+    var jsonStr = []byte(`{"markdown":"` + *message + `", "roomId":"` + testRoom + `"}`)
                      
     req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
     req.Header.Set("Authorization", "Bearer " + testToken)
