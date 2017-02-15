@@ -46,13 +46,13 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     log.Printf("%+v\n", t)
     log.Println(t.ID)
-    getMessage(t.ID)
+    getMessage(t.ID, t.Data.RoomID)
     //LOG: that
 }
 
-func getMessage(id string) string {
+func getMessage(id string, room string) string {
     
-    log.Println("URL:>", apiURL + "/" + id)
+    log.Println("URL:>", apiURL + "/" + id + "?roomId=" + room)
 
     req, err := http.NewRequest("GET", apiURL, nil)
     req.Header.Set("Authorization", "Bearer " + testToken)
