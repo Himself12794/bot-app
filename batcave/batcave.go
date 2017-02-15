@@ -4,7 +4,14 @@ import (
     "encoding/json"
     "log"
     "net/http"
+    "io/ioutil"
     "time"
+)
+
+const (
+    apiURL = "https://api.ciscospark.com/v1/messages"
+    testRoom = "Y2lzY29zcGFyazovL3VzL1JPT00vNWZmNGM1ZTAtZjNhMS0xMWU2LWJhOWYtOTUwN2UyMTZkOTRj"
+    testToken = "MzVhMzc3NzYtNDNjYS00MWZkLWJjODgtN2JjMWIwNzgzYTY4YjMwZjE4MGMtNGFj"
 )
 
 type requested struct { 
@@ -30,8 +37,6 @@ type requested struct {
 
 func test(rw http.ResponseWriter, req *http.Request) {
     req.ParseForm()
-    log.Println(req.Form)
-    //LOG: map[{"test": "that"}:[]]
     var t requested
     decoder := json.NewDecoder(req.Body)
     err := decoder.Decode(&t)
@@ -40,7 +45,31 @@ func test(rw http.ResponseWriter, req *http.Request) {
     }
     defer req.Body.Close()
     log.Println(t.Data.ID)
+    getMessage(t.Data.ID)
     //LOG: that
+}
+
+func getMessage(id string) string {
+    
+    log.Println("URL:>", apiURL + "/" + id)
+
+    req, err := http.NewRequest("GET", apiURL, nil)
+    req.Header.Set("Authorization", "Bearer " + testToken)
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    log.Println("response Status:", resp.Status)
+    log.Println("response Headers:", resp.Header)
+    body, _ := ioutil.ReadAll(resp.Body)
+    log.Println("response Body:", string(body))
+    
+    return string(body)
 }
 
 func Start() {
