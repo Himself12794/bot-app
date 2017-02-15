@@ -4,7 +4,6 @@ import (
     "encoding/json"
     "log"
     "net/http"
-    "io/ioutil"
     "time"
 )
 
@@ -79,7 +78,7 @@ func getMessage(id string) string {
     
     var t responsed
     decoder := json.NewDecoder(resp.Body)
-    err := decoder.Decode(&t)
+    err = decoder.Decode(&t)
     if err != nil {
         panic(err)
     }
