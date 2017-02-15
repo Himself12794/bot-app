@@ -13,6 +13,7 @@ import (
 
 const (
     apiURL = "https://api.ciscospark.com/v1/messages"
+    botId = "Y2lzY29zcGFyazovL3VzL1BFT1BMRS83NzU0YjYxYy04MjhlLTQ2MTItOWJjNy1lZmUyYWZhMDI3NGU"
     testRoom = "Y2lzY29zcGFyazovL3VzL1JPT00vNWZmNGM1ZTAtZjNhMS0xMWU2LWJhOWYtOTUwN2UyMTZkOTRj"
     testToken = "MzVhMzc3NzYtNDNjYS00MWZkLWJjODgtN2JjMWIwNzgzYTY4YjMwZjE4MGMtNGFj"
 )
@@ -58,7 +59,9 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID))
+    if t.Data.PersonID != botId {
+        sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID))
+    }
 }
 
 func getMessage(id string) string {
