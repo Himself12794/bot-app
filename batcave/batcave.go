@@ -58,7 +58,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    sendTestMessage("The batcave echos back: \"" + getMessage(t.Data.ID) + "\"")
+    sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID))
 }
 
 func getMessage(id string) string {
