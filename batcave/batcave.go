@@ -51,10 +51,10 @@ func test(rw http.ResponseWriter, req *http.Request) {
 }
 
 func getMessage(id string) string {
-    
-    log.Println("URL:>", apiURL + "/" + id)
+    var url := apiURL + "/" + id
+    log.Println("URL:>", url)
 
-    req, err := http.NewRequest("GET", apiURL, nil)
+    req, err := http.NewRequest("GET", url, nil)
     req.Header.Set("Authorization", "Bearer " + testToken)
     req.Header.Set("Content-Type", "application/json")
 
