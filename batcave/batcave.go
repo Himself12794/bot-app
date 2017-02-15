@@ -4,7 +4,11 @@ import (
     "encoding/json"
     "log"
     "net/http"
-    "time"
+    "time"    
+    "fmt"
+    "bytes"
+    "io/ioutil"
+    "strings"
 )
 
 const (
@@ -83,10 +87,35 @@ func getMessage(id string) string {
         panic(err)
     }
     
-    return t.Text
+    str := strings.SplitN(t.Text, " ", 1)
+    
+    return str[1]
 }
 
 func Start() {
     http.HandleFunc("/", test)
     log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func sendTestMessage(message string) {
+    
+    fmt.Println("URL:>", apiURL)
+
+    var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + testRoom + `"}`)
+                     
+    req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
+    req.Header.Set("Authorization", "Bearer " + testToken)
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    fmt.Println("response Status:", resp.Status)
+    fmt.Println("response Headers:", resp.Header)
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Println("response Body:", string(body))
 }
