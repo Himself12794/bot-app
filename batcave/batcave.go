@@ -46,7 +46,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     log.Printf("%+v\n", t)
     log.Println(t.ID)
-    getMessage(t.ID, t.Data.RoomID)
+    getMessage(t.Data.ID, t.Data.RoomID)
     //LOG: that
 }
 
