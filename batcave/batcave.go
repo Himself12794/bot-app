@@ -58,7 +58,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    log.Println(getMessage(t.Data.ID))
+    sendTestMessage(`The batcave echos back: "` + getMessage(t.Data.ID) + `"`)
     //LOG: that
 }
 
@@ -87,9 +87,13 @@ func getMessage(id string) string {
         panic(err)
     }
     
-    str := strings.SplitN(t.Text, " ", 1)
+    str := strings.SplitN(t.Text, " ", 2)
     
-    return str[1]
+    if len(str) > 1 {
+        return str[1]
+    } 
+
+    return ""
 }
 
 func Start() {
