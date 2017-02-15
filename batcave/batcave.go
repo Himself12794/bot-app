@@ -51,7 +51,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 }
 
 func getMessage(id string) string {
-    var url := apiURL + "/" + id
+    url := apiURL + "/" + id
     log.Println("URL:>", url)
 
     req, err := http.NewRequest("GET", url, nil)
