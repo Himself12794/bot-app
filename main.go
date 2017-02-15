@@ -6,6 +6,7 @@ import (
     "bytes"
     "io/ioutil"
     "flag"
+    server "github.com/himself12794/bot-app/batcave"
 )
 
 const (
@@ -18,7 +19,8 @@ var message = flag.String("msg", "Test", "The message to send to Spark")
 
 func main() {
     flag.Parse()
-    sendTestMessage()
+    server.Start()
+    //sendTestMessage()
 }
 
 func sendTestMessage() {
