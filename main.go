@@ -1,10 +1,6 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
-    "bytes"
-    "io/ioutil"
     "flag"
     server "github.com/himself12794/bot-app/batcave"
 )
@@ -20,28 +16,4 @@ var message = flag.String("msg", "Test", "The message to send to Spark")
 func main() {
     flag.Parse()
     server.Start()
-    //sendTestMessage()
-}
-
-func sendTestMessage() {
-    
-    fmt.Println("URL:>", apiURL)
-
-    var jsonStr = []byte(`{"markdown":"` + *message + `", "roomId":"` + testRoom + `"}`)
-                     
-    req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
-    req.Header.Set("Authorization", "Bearer " + testToken)
-    req.Header.Set("Content-Type", "application/json")
-
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        panic(err)
-    }
-    defer resp.Body.Close()
-
-    fmt.Println("response Status:", resp.Status)
-    fmt.Println("response Headers:", resp.Header)
-    body, _ := ioutil.ReadAll(resp.Body)
-    fmt.Println("response Body:", string(body))
 }
