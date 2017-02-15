@@ -44,15 +44,15 @@ func test(rw http.ResponseWriter, req *http.Request) {
         panic(err)
     }
     defer req.Body.Close()
-    log.Printf("%+v\n", t)
+    //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    getMessage(t.Data.ID, t.Data.RoomID)
+    getMessage(t.Data.ID)
     //LOG: that
 }
 
-func getMessage(id string, room string) string {
+func getMessage(id string) string {
     
-    log.Println("URL:>", apiURL + "/" + id + "?roomId=" + room)
+    log.Println("URL:>", apiURL + "/" + id)
 
     req, err := http.NewRequest("GET", apiURL, nil)
     req.Header.Set("Authorization", "Bearer " + testToken)
