@@ -58,8 +58,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    sendTestMessage(`The batcave echos back: "` + getMessage(t.Data.ID) + `"`)
-    //LOG: that
+    sendTestMessage("The batcave echos back: \"" + getMessage(t.Data.ID) + "\"")
 }
 
 func getMessage(id string) string {
@@ -104,7 +103,7 @@ func Start() {
 func sendTestMessage(message string) {
     
     fmt.Println("URL:>", apiURL)
-
+    fmt.Println(message)
     var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + testRoom + `"}`)
                      
     req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
