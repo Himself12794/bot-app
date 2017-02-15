@@ -35,6 +35,15 @@ type requested struct {
     } `json:"data"` 
 }
 
+type responsed struct {
+	ID string `json:"id"`
+	RoomID string `json:"roomId"`
+	PersonID string `json:"personId"`
+	PersonEmail string `json:"personEmail"`
+	Text string `json:"text"`
+	Created time.Time `json:"created"`
+}
+
 func test(rw http.ResponseWriter, req *http.Request) {
     req.ParseForm()
     var t requested
@@ -46,7 +55,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     defer req.Body.Close()
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
-    getMessage(t.Data.ID)
+    log.Println(getMessage(t.Data.ID))
     //LOG: that
 }
 
@@ -67,10 +76,15 @@ func getMessage(id string) string {
 
     log.Println("response Status:", resp.Status)
     log.Println("response Headers:", resp.Header)
-    body, _ := ioutil.ReadAll(resp.Body)
-    log.Println("response Body:", string(body))
     
-    return string(body)
+    var t responsed
+    decoder := json.NewDecoder(resp.Body)
+    err := decoder.Decode(&t)
+    if err != nil {
+        panic(err)
+    }
+    
+    return t.Text
 }
 
 func Start() {
