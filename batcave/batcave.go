@@ -60,7 +60,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     //log.Printf("%+v\n", t)
     log.Println(t.ID)
     if t.Data.PersonID != botId {
-        sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID))
+        sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID), t.Data.RoomID)
     }
 }
 
@@ -103,11 +103,11 @@ func Start() {
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func sendTestMessage(message string) {
+func sendTestMessage(message string, room string) {
     
     fmt.Println("URL:>", apiURL)
     fmt.Println(message)
-    var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + testRoom + `"}`)
+    var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + room + `"}`)
                      
     req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
     req.Header.Set("Authorization", "Bearer " + testToken)
