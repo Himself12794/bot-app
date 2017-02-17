@@ -1,4 +1,4 @@
-package server
+package batcave
 
 import (
     "encoding/json"
@@ -13,7 +13,7 @@ import (
 
 const (
     apiURL = "https://api.ciscospark.com/v1/messages"
-    botId = "Y2lzY29zcGFyazovL3VzL1BFT1BMRS83NzU0YjYxYy04MjhlLTQ2MTItOWJjNy1lZmUyYWZhMDI3NGU"
+    botID = "Y2lzY29zcGFyazovL3VzL1BFT1BMRS83NzU0YjYxYy04MjhlLTQ2MTItOWJjNy1lZmUyYWZhMDI3NGU"
     testRoom = "Y2lzY29zcGFyazovL3VzL1JPT00vNWZmNGM1ZTAtZjNhMS0xMWU2LWJhOWYtOTUwN2UyMTZkOTRj"
     testToken = "MzVhMzc3NzYtNDNjYS00MWZkLWJjODgtN2JjMWIwNzgzYTY4YjMwZjE4MGMtNGFj"
 )
@@ -46,22 +46,6 @@ type responsed struct {
 	PersonEmail string `json:"personEmail"`
 	Text string `json:"text"`
 	Created time.Time `json:"created"`
-}
-
-func test(rw http.ResponseWriter, req *http.Request) {
-    req.ParseForm()
-    var t requested
-    decoder := json.NewDecoder(req.Body)
-    err := decoder.Decode(&t)
-    if err != nil {
-        panic(err)
-    }
-    defer req.Body.Close()
-    //log.Printf("%+v\n", t)
-    log.Println(t.ID)
-    if t.Data.PersonID != botId {
-        sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID), t.Data.RoomID)
-    }
 }
 
 func getMessage(id string) string {
@@ -98,8 +82,24 @@ func getMessage(id string) string {
     return ""
 }
 
-func Start() {
-    http.HandleFunc("/", test)
+// Start the request server with the specified database
+func Start(taskDb TaskDatabase) {
+    http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
+        
+        req.ParseForm()
+        var t requested
+        decoder := json.NewDecoder(req.Body)
+        err := decoder.Decode(&t)
+        if err != nil {
+            panic(err)
+        }
+        defer req.Body.Close()
+        //log.Printf("%+v\n", t)
+        log.Println(t.ID)
+        if t.Data.PersonID != botID {
+            sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID), t.Data.RoomID)
+        }
+    })
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
 

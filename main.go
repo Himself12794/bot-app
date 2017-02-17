@@ -12,5 +12,7 @@ const (
 
 
 func main() {
-    server.Start()
+    db := server.NewTaskDatabase()
+    
+    server.Start(db)
 }
