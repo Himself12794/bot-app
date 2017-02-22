@@ -9,6 +9,7 @@ import (
     "bytes"
     "io/ioutil"
     "strings"
+    "github.com/CleverbotIO/go-cleverbot.io"
 )
 
 const (
@@ -16,6 +17,8 @@ const (
     botID = "Y2lzY29zcGFyazovL3VzL1BFT1BMRS83NzU0YjYxYy04MjhlLTQ2MTItOWJjNy1lZmUyYWZhMDI3NGU"
     testRoom = "Y2lzY29zcGFyazovL3VzL1JPT00vNWZmNGM1ZTAtZjNhMS0xMWU2LWJhOWYtOTUwN2UyMTZkOTRj"
     testToken = "MzVhMzc3NzYtNDNjYS00MWZkLWJjODgtN2JjMWIwNzgzYTY4YjMwZjE4MGMtNGFj"
+    apiUser = "BbPSrA2qmTRlb3E9"
+    apiKey = "EH4IdmsgN8I0CoFEJ2Fpf5gZTyxX7CAb"
 )
 
 type requested struct { 
@@ -78,29 +81,35 @@ func getMessage(id string) string {
     if len(str) > 1 {
         return str[1]
     } 
-
+ 
     return ""
 }
 
 // Start the request server with the specified database
 func Start(taskDb TaskDatabase) {
-    http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
-        
-        req.ParseForm()
-        var t requested
-        decoder := json.NewDecoder(req.Body)
-        err := decoder.Decode(&t)
-        if err != nil {
-            panic(err)
-        }
-        defer req.Body.Close()
-        //log.Printf("%+v\n", t)
-        log.Println(t.ID)
-        if t.Data.PersonID != botID {
-            sendTestMessage("The batcave echos back: " + getMessage(t.Data.ID), t.Data.RoomID)
-        }
-    })
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    
+    theBot, err := cleverbot.New(apiUser, apiKey, "")
+    if err != nil {
+    
+        http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
+            
+            req.ParseForm()
+            var t requested
+            decoder := json.NewDecoder(req.Body)
+            err := decoder.Decode(&t)
+            if err != nil {
+                panic(err)
+            }
+            defer req.Body.Close()
+            //log.Printf("%+v\n", t)
+            log.Println(t.ID)
+            if t.Data.PersonID != botID {
+                msg := theBot.Ask(getMessage(t.Data.ID))
+                sendTestMessage(msg, t.Data.RoomID)
+            }
+        })
+        log.Fatal(http.ListenAndServe(":8080", nil))
+    }
 }
 
 func sendTestMessage(message string, room string) {
