@@ -104,8 +104,10 @@ func Start(taskDb TaskDatabase) {
             //log.Printf("%+v\n", t)
             log.Println(t.ID)
             if t.Data.PersonID != botID {
-                msg := theBot.Ask(getMessage(t.Data.ID))
-                sendTestMessage(msg, t.Data.RoomID)
+                msg, err := theBot.Ask(getMessage(t.Data.ID))
+                if err != nil {
+                    sendTestMessage(msg, t.Data.RoomID)
+                }
             }
         })
         log.Fatal(http.ListenAndServe(":8080", nil))
