@@ -89,7 +89,7 @@ func getMessage(id string) string {
 func Start(taskDb TaskDatabase) {
     
     theBot, err := cleverbot.New(apiUser, apiKey, "")
-    if err == nil {
+    if err != nil {
         log.Fatal(err)
     }    
     http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
@@ -106,8 +106,9 @@ func Start(taskDb TaskDatabase) {
         if t.Data.PersonID != botID {
             msg, err := theBot.Ask(getMessage(t.Data.ID))
             if err != nil {
-                sendTestMessage(msg, t.Data.RoomID)
+                log.Fatal(err)
             }
+            sendTestMessage(msg, t.Data.RoomID)
         }
     })
     log.Fatal(http.ListenAndServe(":8080", nil))
