@@ -89,29 +89,29 @@ func getMessage(id string) string {
 func Start(taskDb TaskDatabase) {
     
     theBot, err := cleverbot.New(apiUser, apiKey, "")
-    if err != nil {
-    
-        http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
-            
-            req.ParseForm()
-            var t requested
-            decoder := json.NewDecoder(req.Body)
-            err := decoder.Decode(&t)
+    if err == nil {
+        log.Fatal(err)
+    }    
+    http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
+        req.ParseForm()
+        var t requested
+        decoder := json.NewDecoder(req.Body)
+        err := decoder.Decode(&t)
+        if err != nil {
+            panic(err)
+        }
+        defer req.Body.Close()
+        //log.Printf("%+v\n", t)
+        log.Println(t.ID)
+        if t.Data.PersonID != botID {
+            msg, err := theBot.Ask(getMessage(t.Data.ID))
             if err != nil {
-                panic(err)
+                sendTestMessage(msg, t.Data.RoomID)
             }
-            defer req.Body.Close()
-            //log.Printf("%+v\n", t)
-            log.Println(t.ID)
-            if t.Data.PersonID != botID {
-                msg, err := theBot.Ask(getMessage(t.Data.ID))
-                if err != nil {
-                    sendTestMessage(msg, t.Data.RoomID)
-                }
-            }
-        })
-        log.Fatal(http.ListenAndServe(":8080", nil))
-    }
+        }
+    })
+    log.Fatal(http.ListenAndServe(":8080", nil))
+    
 }
 
 func sendTestMessage(message string, room string) {
