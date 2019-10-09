@@ -66,7 +66,7 @@ func getMessage(id string) string {
 		panic(err)
 	}
 
-	if strings.HasPrefix(t.Text, "PhilBot") {
+	if strings.HasPrefix(t.Text, "shizzlebot") {
 		str := strings.SplitN(t.Text, " ", 2)
 		if len(str) > 1 {
 			return str[1]
