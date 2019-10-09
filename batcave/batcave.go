@@ -91,7 +91,7 @@ func Start() {
 
 		msg := getMessage(t.Data.ID)
 		person := getPersonDetails(t.Data.PersonID)
-		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", person.NickName, msg)
+		resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you send me: '%s'", t.Data.PersonID, person.NickName, msg)
 
 		sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
 
