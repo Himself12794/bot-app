@@ -113,6 +113,9 @@ func Start() {
 
 		log.Println("Got a card interaction")
 
+		a := getAttachment(t.Data.ID)
+		fmt.Printf("%+v\n", a)
+
 		//msg := getMessage(t.Data.ID)
 		//person := getPersonDetails(t.Data.PersonID)
 		//resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you sent me: '%s'", t.Data.PersonID, person.NickName, msg)
@@ -132,8 +135,33 @@ type person struct {
 	NickName string `json:"nickName"`
 }
 
-func getAttachment(id string) interface{} {
-	return nil
+type attachments struct {
+	Inputs map[string]interface{} `json:"inputs"`
+}
+
+func getAttachment(id string) attachments {
+
+	req, err := http.NewRequest("GET", apiURL+"/attachment/actions/"+id, nil)
+	req.Header.Set("Authorization", "Bearer "+botToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	var a attachments
+
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&a)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	return a
 }
 
 func getPersonDetails(id string) person {
@@ -164,8 +192,6 @@ func getPersonDetails(id string) person {
 func sendCard(roomID string) {
 	jsonStr := fmt.Sprintf(card, roomID)
 	jsonBytes := []byte(jsonStr)
-
-	fmt.Println(jsonStr)
 
 	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonBytes))
 	req.Header.Set("Authorization", "Bearer "+botToken)
