@@ -46,7 +46,7 @@ type responsed struct {
 }
 
 func getMessage(id string) string {
-	url := apiURL + "/" + id
+	url := apiURL + "/messages/" + id
 
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", "Bearer "+botToken)
