@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -144,15 +145,9 @@ func sendTestMessage(message, room, personID, token string) {
 		panic(err)
 	}
 
-	var m map[string]string
+	content, err := ioutil.ReadAll(resp.Body)
 
-	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&m)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("%+v\n", m)
+	fmt.Printf("%+v\n", string(content))
 
 	defer resp.Body.Close()
 }
