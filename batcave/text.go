@@ -68,10 +68,7 @@ const card = `
             "actions": [
                 {
                     "type": "Action.Submit",
-                    "title": "Search for Opportunities",
-                    "data": {
-                        "x": 13
-                    }
+                    "title": "Search for Opportunities"
                 }
             ]
         }
