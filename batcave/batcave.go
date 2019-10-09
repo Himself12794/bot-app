@@ -143,5 +143,16 @@ func sendTestMessage(message, room, personID, token string) {
 	if err != nil {
 		panic(err)
 	}
+
+	var m map[string]string
+
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&m)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%+v\n", m)
+
 	defer resp.Body.Close()
 }
