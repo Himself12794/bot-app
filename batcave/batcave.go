@@ -92,7 +92,7 @@ func Start() {
 		person := getPersonDetails(t.Data.PersonID)
 		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", person.NickName, msg)
 
-		sendTestMessage(resp, t.Data.RoomID, botToken)
+		sendTestMessage(resp, t.Data.RoomID, botToken, t.Data.PersonID)
 
 		defer req.Body.Close()
 
@@ -130,9 +130,9 @@ func getPersonDetails(id string) person {
 	return p
 }
 
-func sendTestMessage(message, room, token string) {
+func sendTestMessage(message, room, personID, token string) {
 
-	var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + room + `"}`)
+	var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + room + `", "mentionedPeople": "` + personID + `"}`)
 
 	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonStr))
 	req.Header.Set("Authorization", "Bearer "+token)
