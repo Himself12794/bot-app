@@ -34,6 +34,7 @@ type requested struct {
 		PersonID    string    `json:"personId"`
 		PersonEmail string    `json:"personEmail"`
 		Created     time.Time `json:"created"`
+		MessageID   string    `json:"messageId"`
 	} `json:"data"`
 }
 
@@ -81,13 +82,15 @@ func getMessage(id string) string {
 // Start the request server with the specified database
 func Start() {
 
-	http.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/mention", func(rw http.ResponseWriter, req *http.Request) {
 		var t requested
 		decoder := json.NewDecoder(req.Body)
 		err := decoder.Decode(&t)
 		if err != nil {
 			panic(err)
 		}
+
+		log.Println("Got a mention")
 
 		//msg := getMessage(t.Data.ID)
 		//person := getPersonDetails(t.Data.PersonID)
@@ -100,12 +103,37 @@ func Start() {
 		defer req.Body.Close()
 
 	})
+	http.HandleFunc("/card", func(rw http.ResponseWriter, req *http.Request) {
+		var t requested
+		decoder := json.NewDecoder(req.Body)
+		err := decoder.Decode(&t)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println("Got a card interaction")
+
+		//msg := getMessage(t.Data.ID)
+		//person := getPersonDetails(t.Data.PersonID)
+		//resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you sent me: '%s'", t.Data.PersonID, person.NickName, msg)
+		//resp := fmt.Sprintf(card, t.Data.PersonID, person.NickName, msg)
+
+		//sendCard(t.Data.RoomID)
+		//sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
+
+		defer req.Body.Close()
+
+	})
 	log.Fatal(http.ListenAndServe("0.0.0.0:9000", nil))
 
 }
 
 type person struct {
 	NickName string `json:"nickName"`
+}
+
+func getAttachment(id string) interface{} {
+	return nil
 }
 
 func getPersonDetails(id string) person {
