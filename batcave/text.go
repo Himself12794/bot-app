@@ -77,5 +77,5 @@ const card = `
         }
     },
     "roomId": "%s",
-    text": "text"
+    "text": "text"
 }`
