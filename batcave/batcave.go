@@ -102,7 +102,7 @@ func Start() {
 		defer req.Body.Close()
 
 	})
-	log.Fatal(http.ListenAndServe(":9000", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:9000", nil))
 
 }
 
