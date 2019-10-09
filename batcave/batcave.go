@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	apiURL   = "https://api.ciscospark.com/v1/messages"
+	apiURL   = "https://api.ciscospark.com/v1"
 	botToken = "OTg4NGEwOTMtYjkwOS00ZDM5LTg4NWEtM2Q4NmM0MGNlZTk3YjZlNjgwNDYtM2Mz_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f"
 )
 
@@ -89,7 +89,8 @@ func Start() {
 		}
 
 		msg := getMessage(t.Data.ID)
-		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", t.Data.PersonEmail, msg)
+		person := getPersonDetails(t.Data.PersonID)
+		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", person.NickName, msg)
 
 		sendTestMessage(resp, t.Data.RoomID, botToken)
 
@@ -100,11 +101,40 @@ func Start() {
 
 }
 
+type person struct {
+	NickName string `json:"nickName"`
+}
+
+func getPersonDetails(id string) person {
+
+	req, err := http.NewRequest("GET", apiURL+"/people/"+id, nil)
+	req.Header.Set("Authorization", "Bearer "+botToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	var p person
+
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&p)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	return p
+}
+
 func sendTestMessage(message, room, token string) {
 
 	var jsonStr = []byte(`{"markdown":"` + message + `", "roomId":"` + room + `"}`)
 
-	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonStr))
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 
