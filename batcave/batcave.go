@@ -11,19 +11,8 @@ import (
 )
 
 const (
-	cleverBotURL = "https://www.cleverbot.com/getreply"
-	apiKey2      = "CCCo6wW1Z5h8hyxmRx1vAXTC5BA"
-	apiURL       = "https://api.ciscospark.com/v1/messages"
-	botID        = "Y2lzY29zcGFyazovL3VzL1BFT1BMRS83NzU0YjYxYy04MjhlLTQ2MTItOWJjNy1lZmUyYWZhMDI3NGU"
-
-	botRoomID = "Y2lzY29zcGFyazovL3VzL1JPT00vZTA3YWQyZGYtYjQwMC0zNzM0LThhNTAtMTJiYjJjMDEzMjgx"
-
-	testRoom  = "Y2lzY29zcGFyazovL3VzL1JPT00vNWZmNGM1ZTAtZjNhMS0xMWU2LWJhOWYtOTUwN2UyMTZkOTRj"
-	testToken = "MzVhMzc3NzYtNDNjYS00MWZkLWJjODgtN2JjMWIwNzgzYTY4YjMwZjE4MGMtNGFj"
-	botID2    = "ZDk0YjlmYWMtNDkyNC00OTExLTkzNGUtMTM4YjdhMDU3ZjU2ZWQ4MmUzNWEtYWMz"
-
-	apiUser = "BbPSrA2qmTRlb3E9"
-	apiKey  = "EH4IdmsgN8I0CoFEJ2Fpf5gZTyxX7CAb"
+	apiURL   = "https://api.ciscospark.com/v1/messages"
+	botToken = "OTg4NGEwOTMtYjkwOS00ZDM5LTg4NWEtM2Q4NmM0MGNlZTk3YjZlNjgwNDYtM2Mz_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f"
 )
 
 type requested struct {
@@ -60,7 +49,7 @@ func getMessage(id string) string {
 	url := apiURL + "/" + id
 
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", "Bearer "+testToken)
+	req.Header.Set("Authorization", "Bearer "+botToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -98,7 +87,12 @@ func Start() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("%+v\n", t)
+
+		msg := getMessage(t.Data.ID)
+		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", t.Data.PersonEmail, msg)
+
+		sendTestMessage(resp, t.Data.RoomID, botToken)
+
 		defer req.Body.Close()
 
 	})
