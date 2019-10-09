@@ -134,9 +134,12 @@ func getPersonDetails(id string) person {
 }
 
 func sendCard(roomID string) {
-	jsonStr := []byte(fmt.Sprintf(card, roomID))
+	jsonStr := fmt.Sprintf(card, roomID)
+	jsonBytes := []byte(jsonStr)
 
-	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonStr))
+	fmt.Println(jsonStr)
+
+	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonBytes))
 	req.Header.Set("Authorization", "Bearer "+botToken)
 	req.Header.Set("Content-Type", "application/json")
 
