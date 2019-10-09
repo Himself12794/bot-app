@@ -93,7 +93,7 @@ func Start() {
 		person := getPersonDetails(t.Data.PersonID)
 		resp := fmt.Sprintf("Hi %s, this is what you send me: '%s'", person.NickName, msg)
 
-		sendTestMessage(resp, t.Data.RoomID, botToken, t.Data.PersonID)
+		sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
 
 		defer req.Body.Close()
 
