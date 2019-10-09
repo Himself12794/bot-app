@@ -24,22 +24,22 @@ const card = `
                 },
                 {
                     "type": "Input.ChoiceSet",
-                    "id": "myColor",
+                    "id": "myCharity",
                     "style": "compact",
                     "isMultiSelect": false,
-                    "value": "1",
+                    "value": "habitat",
                     "choices": [
                         {
                             "title": "Habitat for Humanity",
-                            "value": "1"
+                            "value": "habitat"
                         },
                         {
                             "title": "Bike Ride for Bill",
-                            "value": "2"
+                            "value": "bike"
                         },
                         {
                             "title": "Cars for Kids",
-                            "value": "3"
+                            "value": "cars"
                         }
                     ]
                 },

@@ -114,15 +114,13 @@ func Start() {
 		log.Println("Got a card interaction")
 
 		a := getAttachment(t.Data.ID)
-		fmt.Printf("%+v\n", a)
 
-		//msg := getMessage(t.Data.ID)
-		//person := getPersonDetails(t.Data.PersonID)
-		//resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you sent me: '%s'", t.Data.PersonID, person.NickName, msg)
-		//resp := fmt.Sprintf(card, t.Data.PersonID, person.NickName, msg)
-
-		//sendCard(t.Data.RoomID)
-		//sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
+		choice := a.Inputs["myCharity"]
+        text := dropDownChoices[choice]
+        
+		person := getPersonDetails(t.Data.PersonID)
+		resp := fmt.Sprintf("Hi <@personId:%s|%s>, you chose %s", t.Data.PersonID, person.NickName, text)
+		sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
 
 		defer req.Body.Close()
 
@@ -136,7 +134,7 @@ type person struct {
 }
 
 type attachments struct {
-	Inputs map[string]interface{} `json:"inputs"`
+	Inputs map[string]string `json:"inputs"`
 }
 
 func getAttachment(id string) attachments {
