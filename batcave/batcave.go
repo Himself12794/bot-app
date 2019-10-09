@@ -89,11 +89,13 @@ func Start() {
 			panic(err)
 		}
 
-		msg := getMessage(t.Data.ID)
-		person := getPersonDetails(t.Data.PersonID)
-		resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you send me: '%s'", t.Data.PersonID, person.NickName, msg)
+		//msg := getMessage(t.Data.ID)
+		//person := getPersonDetails(t.Data.PersonID)
+		//resp := fmt.Sprintf("Hi <@personId:%s|%s>, this is what you sent me: '%s'", t.Data.PersonID, person.NickName, msg)
+		//resp := fmt.Sprintf(card, t.Data.PersonID, person.NickName, msg)
 
-		sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
+		sendCard(t.Data.RoomID)
+		//sendTestMessage(resp, t.Data.RoomID, t.Data.PersonID, botToken)
 
 		defer req.Body.Close()
 
@@ -129,6 +131,26 @@ func getPersonDetails(id string) person {
 	defer resp.Body.Close()
 
 	return p
+}
+
+func sendCard(roomID string) {
+	jsonStr := []byte(fmt.Sprintf(card, roomID))
+
+	req, err := http.NewRequest("POST", apiURL+"/messages", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Authorization", "Bearer "+botToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	content, err := ioutil.ReadAll(resp.Body)
+
+	fmt.Printf("%+v\n", string(content))
+
+	defer resp.Body.Close()
 }
 
 func sendTestMessage(message, room, personID, token string) {
